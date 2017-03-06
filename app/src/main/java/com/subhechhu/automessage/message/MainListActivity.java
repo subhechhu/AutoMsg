@@ -27,6 +27,7 @@ public class MainListActivity extends AppCompatActivity {
     TextView textView_noMessage;
     List<Details> detailOfRemainder;
     RecyclerView recyclerView;
+    FloatingActionButton fab;
 
     CustomAdapter customAdapter;
     DBhelper dbHelper;
@@ -39,19 +40,36 @@ public class MainListActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
 
         textView_noMessage = (TextView) findViewById(R.id.textView_noRemainderFound);
+        fab = (FloatingActionButton) findViewById(R.id.fab_add);
+        recyclerView = (RecyclerView) findViewById(R.id.recyclerView_main);
+
         detailOfRemainder = new ArrayList<>();
 
         if (dbHelper == null) {
             dbHelper = new DBhelper(AppController.getContext());
         }
-        recyclerView = (RecyclerView) findViewById(R.id.recyclerView_main);
         FetchAllMessage();
 
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab_add);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 ChooseMedium();
+            }
+        });
+
+        recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
+                super.onScrollStateChanged(recyclerView, newState);
+            }
+
+            @Override
+            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+                if (dy > 0 && fab.isShown()) {
+                    fab.hide();
+                }else{
+                    fab.show();
+                }
             }
         });
     }
