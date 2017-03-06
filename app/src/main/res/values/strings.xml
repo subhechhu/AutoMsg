@@ -1,0 +1,41 @@
+<resources>
+    <string name="app_name">AutoMsg</string>
+    <string name="automessage">AutoMessage</string>
+    <string name="app_logo">App logo</string>
+    <string name="firstPageText">AutoMessage is the Automatic Messaging Application.\nSet the Phone Number, Time, Date, Message &amp; RELAX.
+        \nWe will take it from there.</string>
+    <string name="secondPageText">No chance you will miss the important wishes any more.\nWe will make it happen</string>
+    <string name="thirdPageText">Please Provide the Permission to Send the Message and Read the Contact\n\nLets AutoMessage</string>
+    <string name="thirdPageTextSecondary">Lets AutoMessage</string>
+    <string name="context">context</string>
+    <string name="contact_permission">Contact\nPermission</string>
+    <string name="sms_permission">SMS\nPermission</string>
+    <string name="proceed">Proceed</string>
+    <string name="permission_request_contact">Allow the application to read Contacts.\nContact is needed to Add the Recipient</string>
+    <string name="permission_request_sms">Allow the application to send SMS.\nSMS is needed to Send the Message Automatically</string>
+    <string name="permission_granted">Permission Granted</string>
+    <string name="permit">Give Permission</string>
+    <string name="logo">logo</string>
+    <string name="email">Enter email</string>
+    <string name="Let_me_in">Let Me In</string>
+    <string name="enter_email">Enter Email</string>
+    <string name="error_invalid_email">Invalid Email Address</string>
+    <string name="title_activity_main_list">AutoMsg</string>
+    <string name="no_remainder_found_please_add_one">No Remainder Found. Please Add One.</string>
+    <string name="appChoose">Choose Medium</string>
+    <string name="messenger">Messenger</string>
+    <string name="whatsapp">Whatsapp</string>
+    <string name="cancel">Cancel</string>
+    <string name="title_activity_message">Add Message</string>
+    <string name="userName">Select the Recipient*</string>
+    <string name="usericon">userIcon</string>
+    <string name="date">Enter the Date*</string>
+    <string name="time">Enter the Time*</string>
+    <string name="message">Add the Message*</string>
+    <string name="appicon">appicon</string>
+    <string name="addMessage">Please Enter the Message</string>
+    <string name="example_text">Happy Birthday,\n\nor\n\nLets Fix Meeting on 18th, 1 PM?</string>
+    <string name="save">Save</string>
+    <string name="messenger_description">Message will be send. Standard Messaging Charge will apply.</string>
+    <string name="other_medium_description">Cannot send message directly. Remainder will be generated.</string>
+</resources>

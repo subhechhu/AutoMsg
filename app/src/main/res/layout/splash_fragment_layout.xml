@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:id="@+id/background_layout"
+    android:background="@color/mainColor"
+    android:paddingTop="25dp">
+
+    <ImageView
+        android:id="@+id/imageView_context"
+        android:layout_centerHorizontal="true"
+        android:layout_centerVertical="false"
+        android:background="@drawable/splash3"
+        android:layout_marginTop="@dimen/padding_75"
+        android:contentDescription="@string/context"
+        android:visibility="visible"
+        android:layout_marginBottom="@dimen/padding_20"
+        android:layout_height="125dp"
+        android:layout_width="125dp" />
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:layout_alignParentStart="true"
+        android:layout_below="@id/imageView_context">
+
+        <TextView
+            android:id="@+id/textView_body"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+            android:textAlignment="center"
+            android:textColor="@color/white"
+            android:text="@string/secondPageText"
+            android:layout_alignParentStart="true"
+            android:padding="@dimen/padding_20" />
+    </RelativeLayout>
+
+    <LinearLayout
+        android:id="@+id/linearlayout_buttons"
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_margin="@dimen/padding_5"
+        android:gravity="center">
+
+        <Button
+            android:text="@string/contact_permission"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:id="@+id/button_contactPermission"
+            android:layout_weight="1"
+            android:textAllCaps="false"
+            android:background="@color/transparent"
+            android:textColor="@color/white" />
+        <Button
+            android:text="@string/sms_permission"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:id="@+id/button_smsPermission"
+            android:layout_weight="1"
+            android:textAllCaps="false"
+            android:background="@color/transparent"
+            android:textColor="@color/white" />
+
+        <Button
+            android:text="@string/proceed"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:id="@+id/button_proceed"
+            android:layout_weight="1"
+            android:textAllCaps="false"
+            android:background="@color/transparent"
+            android:textColor="@color/white" />
+
+    </LinearLayout>
+</RelativeLayout>

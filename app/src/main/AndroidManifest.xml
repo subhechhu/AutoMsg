@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.subhechhu.automessage">
+
+    <uses-permission android:name="android.permission.SEND_SMS" />
+    <uses-permission android:name="android.permission.READ_CONTACTS" />
+
+    <application
+        android:name=".AppController"
+        android:allowBackup="true"
+        android:icon="@drawable/app_logo"
+        android:label="@string/app_name"
+        android:supportsRtl="true"
+        android:theme="@style/AppTheme">
+        <activity android:name=".MainActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity android:name=".Info.InfoActivity" />
+        <activity android:name=".login.LoginActivity" />
+        <activity android:name=".message.MainListActivity"/>
+        <activity
+            android:name=".message.MessageActivity"
+            android:label="@string/title_activity_message"
+            android:theme="@style/AppTheme"/>
+
+        <receiver android:name=".message.AlarmReceiver"/>
+    </application>
+</manifest>

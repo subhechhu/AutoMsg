@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:padding="@dimen/activity_vertical_margin">
+
+    <TextView
+        android:id="@+id/dialog_header"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginBottom="@dimen/activity_vertical_margin"
+        android:gravity="center_horizontal"
+        android:text="@string/addMessage"
+        android:textSize="@dimen/dialog_header"
+        android:textStyle="bold" />
+
+    <EditText
+        android:id="@+id/message_ET"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/dialog_header"
+        android:layout_marginBottom="@dimen/activity_vertical_margin"
+        android:background="@drawable/border"
+        android:ems="10"
+        android:gravity="top"
+        android:hint="@string/example_text"
+        android:textColorHint="@color/light_grey"
+        android:inputType="textMultiLine"
+        android:maxLength="@android:integer/config_mediumAnimTime"
+        android:minHeight="@dimen/padding_250"
+        android:padding="@dimen/padding_10" />
+
+    <LinearLayout
+        style="?android:attr/buttonBarStyle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/message_ET"
+        android:gravity="bottom"
+        android:orientation="horizontal">
+
+        <Button
+            android:id="@+id/button_proceed"
+            style="?android:attr/buttonBarButtonStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="@dimen/padding_5"
+            android:layout_weight="1"
+            android:background="@color/colorPrimaryDark"
+            android:drawablePadding="5dp"
+            android:text="@string/proceed"
+            android:textAllCaps="false"
+            android:textColor="@color/white" />
+
+        <Button
+            android:id="@+id/button_cancel"
+            style="?android:attr/buttonBarButtonStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/padding_5"
+            android:layout_weight="1"
+            android:background="@color/red"
+            android:text="@string/cancel"
+            android:textAllCaps="false"
+            android:textColor="@color/white" />
+    </LinearLayout>
+</RelativeLayout>
