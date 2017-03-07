@@ -13,6 +13,7 @@
     <color name="registerColor">#99CC99</color>
     <color name="red">#bc2a2a</color>
     <color name="colorLightText">#a29caa</color>
+    <color name="colorLightText_transparent">#50706f71</color>
     <color name="light_grey">#c9c7c7</color>
     <color name="very_light_grey">#e7e7e7</color>
 </resources>

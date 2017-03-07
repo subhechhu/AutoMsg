@@ -69,17 +69,19 @@
             android:layout_weight="0.3"
             android:gravity="end|center_vertical"
             android:weightSum="2">
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:id="@+id/textview_time"
-                android:textSize="@dimen/text_14"
-                android:gravity="center"
-                android:text="asdasd" />
+
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:id="@+id/textview_date"
+                android:textSize="@dimen/text_14"
+                android:gravity="center"
+                android:text="asdasd" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/textview_time"
                 android:textSize="@dimen/text_14"
                 android:gravity="center"
                 android:text="asdasd" />

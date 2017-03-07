@@ -12,6 +12,7 @@ import android.widget.TextView;
 import com.subhechhu.automessage.Details;
 import com.subhechhu.automessage.R;
 
+import java.util.Calendar;
 import java.util.List;
 
 /**
@@ -21,6 +22,7 @@ import java.util.List;
 class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.MyViewHolder> {
     private java.util.List<Details> detailsList;
     Context context;
+    Calendar currentCalendar, remainderCalendar;
 
     CustomAdapter(Context context, List<Details> detailsList) {
         this.detailsList = detailsList;
@@ -59,6 +61,7 @@ class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.MyViewHolder> {
         holder.dateTV.setText(details.getDate());
         holder.timeTV.setText(details.getTime());
         holder.messageTV.setText(details.getMessage());
+
         if (details.getMediumSelected().equals("Messenger")) {
             holder.button_messenger.setBackgroundResource(R.drawable.message_icon);
         } else if (details.getMediumSelected().equals("Whatsapp")) {

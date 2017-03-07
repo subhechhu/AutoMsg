@@ -35,16 +35,19 @@
         <activity
             android:name=".DialogClass"
             android:launchMode="singleInstance"
-            android:theme="@style/Theme.AppCompat.Light.Dialog"/>
+            android:theme="@style/Theme.AppCompat.Light.Dialog" />
 
         <service android:name=".message.RebootService" />
 
         <receiver android:name=".message.AlarmReceiver">
             <intent-filter>
                 <action android:name="android.intent.action.BOOT_COMPLETED" />
+
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </receiver>
+
+        <activity android:name=".AbtActivity"></activity>
     </application>
 
 </manifest>

@@ -1,7 +1,6 @@
 package com.subhechhu.automessage.message;
 
 import android.app.AlarmManager;
-import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
@@ -14,10 +13,13 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.subhechhu.automessage.AbtActivity;
 import com.subhechhu.automessage.AppController;
 import com.subhechhu.automessage.Details;
 import com.subhechhu.automessage.R;
@@ -206,4 +208,22 @@ public class MainListActivity extends AppCompatActivity {
     private int DeleteRemainder(String id) {
         return dbHelper.deleteRemainder(id);
     }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.main, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+        if (id == R.id.action_about) {
+            Intent notificationActivity = new Intent(MainListActivity.this, AbtActivity.class);
+            startActivity(notificationActivity);
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
 }
