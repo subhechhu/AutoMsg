@@ -55,7 +55,7 @@ public class MainActivity extends AppCompatActivity {
                     startActivity(new Intent(MainActivity.this, MainListActivity.class));
                     finish(); // Kills the SplashACtivity
                 }
-            }, 2500);
+            }, 1500);
         }
     }
 

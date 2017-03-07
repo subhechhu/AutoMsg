@@ -90,10 +90,13 @@ public class DBhelper extends SQLiteOpenHelper {
             cursor = db.rawQuery("select * from " + TABLE_NAME, null);
         } catch (Exception e) {
             e.printStackTrace();
-        } finally {
-            if (db != null) {
-                db.close();
-            }
+//        } finally {
+//            if (db != null) {
+//                db.close();
+//            }
+//            if (cursor != null) {
+//                cursor.close();
+//            }
         }
         return cursor;
     }

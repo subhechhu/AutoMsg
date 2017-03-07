@@ -4,6 +4,7 @@
 
     <uses-permission android:name="android.permission.SEND_SMS" />
     <uses-permission android:name="android.permission.READ_CONTACTS" />
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
 
     <application
         android:name=".AppController"
@@ -15,17 +16,31 @@
         <activity android:name=".MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
         <activity android:name=".Info.InfoActivity" />
         <activity android:name=".login.LoginActivity" />
-        <activity android:name=".message.MainListActivity"/>
+        <activity
+            android:name=".message.MainListActivity"
+            android:launchMode="singleInstance" />
         <activity
             android:name=".message.MessageActivity"
             android:label="@string/title_activity_message"
-            android:theme="@style/AppTheme"/>
+            android:theme="@style/AppTheme" />
+        <activity
+            android:name=".message.TransparentActivity"
+            android:theme="@android:style/Theme.Translucent.NoTitleBar" />
 
-        <receiver android:name=".message.AlarmReceiver"/>
+        <service android:name=".message.RebootService" />
+
+        <receiver android:name=".message.AlarmReceiver">
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </receiver>
     </application>
+
 </manifest>

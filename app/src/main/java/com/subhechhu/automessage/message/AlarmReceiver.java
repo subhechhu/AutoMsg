@@ -18,6 +18,7 @@ import static android.content.Context.NOTIFICATION_SERVICE;
 /**
  * Created by subhechhu on 3/5/2017.
  */
+
 public class AlarmReceiver extends BroadcastReceiver {
     SharedPrefUtil sharedPrefUtil;
 
@@ -26,18 +27,25 @@ public class AlarmReceiver extends BroadcastReceiver {
 
         Log.e(getClass().getSimpleName(), "alarm receiver");
 
-        String name = intent.getStringExtra("name");
-        String number = intent.getStringExtra("number");
-        String date = intent.getStringExtra("date");
-        String time = intent.getStringExtra("time");
-        String message = intent.getStringExtra("message");
-        String id = intent.getStringExtra("id");
-        String medium = intent.getStringExtra("medium");
+        if ("android.intent.action.BOOT_COMPLETED".equals(intent.getAction())) {
+            Log.e("subhechhu", "intent filter matched");
+            Log.e("subhechhu", "HEllooooo");
+            Intent pushIntent = new Intent(context, TransparentActivity.class);
+            context.startActivity(pushIntent);
+        } else {
+            String name = intent.getStringExtra("name");
+            String number = intent.getStringExtra("number");
+            String date = intent.getStringExtra("date");
+            String time = intent.getStringExtra("time");
+            String message = intent.getStringExtra("message");
+            String id = intent.getStringExtra("id");
+            String medium = intent.getStringExtra("medium");
 
-        if (medium.equals("Messenger")) {
-            MessengerAction(context, name, message, id, number);
-        } else if (medium.equals("Whatsapp")) {
+            if (medium.equals("Messenger")) {
+                MessengerAction(context, name, message, id, number);
+            } else if (medium.equals("Whatsapp")) {
 //            WhatsappAction();
+            }
         }
     }
 

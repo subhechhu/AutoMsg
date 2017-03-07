@@ -53,10 +53,7 @@ public class MainListActivity extends AppCompatActivity {
 
         detailOfRemainder = new ArrayList<>();
 
-        NotificationManager notificationManager = (NotificationManager)getSystemService(NOTIFICATION_SERVICE);
-        notificationManager.cancelAll();
-
-        sharedPrefUtil=new SharedPrefUtil();
+        sharedPrefUtil = new SharedPrefUtil();
         sharedPrefUtil.setSharedPreferenceInt(AppController.getContext(), "notificationCount", 0);
 
         if (dbHelper == null) {
@@ -90,6 +87,12 @@ public class MainListActivity extends AppCompatActivity {
     private void FetchAllMessage() {
         try {
             Cursor cursor = dbHelper.getAllRemainders();
+
+            Log.e("devsubhechhu","all remainder: "+cursor.getCount());
+//            for (int i = 0; i < cursor.getColumnCount(); i++) {
+//                Log.e(TAG, "buhahahaha " + cursor.getColumnName(i));
+//                Log.e(TAG, "buhahahaha name: " + cursor.getString(i));
+//            }
             if (cursor.moveToLast()) {
                 do {
                     Details mydetail = new Details();
@@ -100,7 +103,6 @@ public class MainListActivity extends AppCompatActivity {
                     mydetail.setTime(cursor.getString(4));
                     mydetail.setMessage(cursor.getString(5));
                     mydetail.setMediumSelected(cursor.getString(6));
-
                     detailOfRemainder.add(mydetail);
                 } while (cursor.moveToPrevious());
                 textView_noMessage.setVisibility(View.GONE);

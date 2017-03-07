@@ -38,4 +38,5 @@
     <string name="save">Save</string>
     <string name="messenger_description">Message will be send. Standard Messaging Charge will apply.</string>
     <string name="other_medium_description">Cannot send message directly. Remainder will be generated.</string>
+    <string name="title_activity_transparent">TransparentActivity</string>
 </resources>
