@@ -32,6 +32,10 @@
         <activity
             android:name=".message.TransparentActivity"
             android:theme="@android:style/Theme.Translucent.NoTitleBar" />
+        <activity
+            android:name=".DialogClass"
+            android:launchMode="singleInstance"
+            android:theme="@style/Theme.AppCompat.Light.Dialog"/>
 
         <service android:name=".message.RebootService" />
 

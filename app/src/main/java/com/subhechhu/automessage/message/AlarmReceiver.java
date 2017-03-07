@@ -1,5 +1,6 @@
 package com.subhechhu.automessage.message;
 
+import android.app.Dialog;
 import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
@@ -10,6 +11,7 @@ import android.telephony.SmsManager;
 import android.util.Log;
 
 import com.subhechhu.automessage.AppController;
+import com.subhechhu.automessage.DialogClass;
 import com.subhechhu.automessage.R;
 import com.subhechhu.automessage.SharedPrefUtil;
 
@@ -28,8 +30,6 @@ public class AlarmReceiver extends BroadcastReceiver {
         Log.e(getClass().getSimpleName(), "alarm receiver");
 
         if ("android.intent.action.BOOT_COMPLETED".equals(intent.getAction())) {
-            Log.e("subhechhu", "intent filter matched");
-            Log.e("subhechhu", "HEllooooo");
             Intent pushIntent = new Intent(context, TransparentActivity.class);
             context.startActivity(pushIntent);
         } else {
@@ -44,9 +44,18 @@ public class AlarmReceiver extends BroadcastReceiver {
             if (medium.equals("Messenger")) {
                 MessengerAction(context, name, message, id, number);
             } else if (medium.equals("Whatsapp")) {
-//            WhatsappAction();
+                WhatsappAction(context, name, message, id);
             }
         }
+    }
+
+    private void WhatsappAction(Context context, String name, String message, String id) {
+        Intent intent1 = new Intent(context, DialogClass.class);
+        intent1.putExtra("id", id);
+        intent1.putExtra("name", name);
+        intent1.putExtra("message", message);
+        intent1.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        context.startActivity(intent1);
     }
 
     private void MessengerAction(Context context, String name, String message, String id, String number) {

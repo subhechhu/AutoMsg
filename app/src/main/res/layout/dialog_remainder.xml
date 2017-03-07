@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="@dimen/fab_margin">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="end">
+
+    </RelativeLayout>
+
+    <TextView
+        android:id="@+id/text_notify"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textColor="@color/colorLightText"
+        android:textSize="@dimen/size_17"
+        android:padding="@dimen/padding_10"
+        android:text="Hello" />
+
+    <TextView
+        android:id="@+id/text_notify_number"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/padding_5"
+        android:textColor="@color/colorLightText"
+        android:textSize="@dimen/size_16"
+        android:padding="@dimen/padding_10"
+        android:text="Testing the message hehehehe" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="end">
+
+        <Button
+            android:id="@+id/button_proceed"
+            style="?android:attr/buttonBarButtonStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+
+            android:layout_marginTop="@dimen/padding_5"
+            android:background="@color/transparent"
+            android:drawablePadding="5dp"
+            android:textAllCaps="false"
+            android:textColor="@color/colorPrimaryDark"
+            android:textSize="@dimen/size_17"
+            android:text="Proceed" />
+    </LinearLayout>
+
+</LinearLayout>

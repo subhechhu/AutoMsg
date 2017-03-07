@@ -39,7 +39,6 @@ public class MainActivity extends AppCompatActivity {
                 android.graphics.PorterDuff.Mode.MULTIPLY);
         sharedPrefUtil = new SharedPrefUtil(); //shared preference object to store boolean value from NewApp() function below.
         newApp = NewApp(); //check if the app is new or old inorder to redirect either to login activity or help fragments.
-        Log.e("subhechhu", "newApp: " + newApp);
         if (newApp) {
             new Timer().schedule(new TimerTask() {
                 @Override
