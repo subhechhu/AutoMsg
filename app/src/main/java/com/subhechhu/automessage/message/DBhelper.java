@@ -83,22 +83,37 @@ public class DBhelper extends SQLiteOpenHelper {
     }
 
     Cursor getAllRemainders() {
-        SQLiteDatabase db = this.getWritableDatabase();
-        return db.rawQuery("select * from " + TABLE_NAME, null);
+        SQLiteDatabase db = null;
+        Cursor cursor = null;
+        try {
+            db = this.getWritableDatabase();
+            cursor = db.rawQuery("select * from " + TABLE_NAME, null);
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            if (db != null) {
+                db.close();
+            }
+        }
+        return cursor;
     }
-//    int deleteRemainder(String id) {
-//        SQLiteDatabase db = null;
-//        int returnValue = 0;
-//        String whereClause = "_id" + "=" + id;
-//        try {
-//            db = this.getWritableDatabase();
-//            returnValue = db.delete(TABLE_NAME, whereClause, null);
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//        }
-//        return returnValue;
-//    }
-//
+
+    int deleteRemainder(String id) {
+        SQLiteDatabase db = null;
+        int returnValue = 0;
+        String whereClause = "_id" + "=" + id;
+        try {
+            db = this.getWritableDatabase();
+            returnValue = db.delete(TABLE_NAME, whereClause, null);
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            if (db != null) {
+                db.close();
+            }
+        }
+        return returnValue;
+    }
 //
 //    long editRemainder(Details details, String id, int position) {
 //        Log.d(getClass().getSimpleName(),"inside EditRemainder id: "+id);

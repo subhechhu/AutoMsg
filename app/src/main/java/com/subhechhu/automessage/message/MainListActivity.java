@@ -1,5 +1,9 @@
 package com.subhechhu.automessage.message;
 
+import android.app.AlarmManager;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
+import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
@@ -12,10 +16,12 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.subhechhu.automessage.AppController;
 import com.subhechhu.automessage.Details;
 import com.subhechhu.automessage.R;
+import com.subhechhu.automessage.SharedPrefUtil;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -32,6 +38,8 @@ public class MainListActivity extends AppCompatActivity {
     CustomAdapter customAdapter;
     DBhelper dbHelper;
 
+    SharedPrefUtil sharedPrefUtil;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -45,6 +53,12 @@ public class MainListActivity extends AppCompatActivity {
 
         detailOfRemainder = new ArrayList<>();
 
+        NotificationManager notificationManager = (NotificationManager)getSystemService(NOTIFICATION_SERVICE);
+        notificationManager.cancelAll();
+
+        sharedPrefUtil=new SharedPrefUtil();
+        sharedPrefUtil.setSharedPreferenceInt(AppController.getContext(), "notificationCount", 0);
+
         if (dbHelper == null) {
             dbHelper = new DBhelper(AppController.getContext());
         }
@@ -56,7 +70,6 @@ public class MainListActivity extends AppCompatActivity {
                 ChooseMedium();
             }
         });
-
         recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
             public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
@@ -67,7 +80,7 @@ public class MainListActivity extends AppCompatActivity {
             public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
                 if (dy > 0 && fab.isShown()) {
                     fab.hide();
-                }else{
+                } else {
                     fab.show();
                 }
             }
@@ -77,8 +90,6 @@ public class MainListActivity extends AppCompatActivity {
     private void FetchAllMessage() {
         try {
             Cursor cursor = dbHelper.getAllRemainders();
-            Log.d(TAG, "detailOfRemainder: " + cursor.getCount());
-
             if (cursor.moveToLast()) {
                 do {
                     Details mydetail = new Details();
@@ -96,7 +107,7 @@ public class MainListActivity extends AppCompatActivity {
 
                 if (customAdapter == null) {
                     RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(MainListActivity.this);
-                    customAdapter = new CustomAdapter(detailOfRemainder);
+                    customAdapter = new CustomAdapter(MainListActivity.this, detailOfRemainder);
                     recyclerView.setLayoutManager(mLayoutManager);
                     recyclerView.setItemAnimator(new DefaultItemAnimator());
                     recyclerView.setAdapter(customAdapter);
@@ -147,7 +158,7 @@ public class MainListActivity extends AppCompatActivity {
 
                 if (customAdapter == null) {
                     RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(MainListActivity.this);
-                    customAdapter = new CustomAdapter(detailOfRemainder);
+                    customAdapter = new CustomAdapter(MainListActivity.this, detailOfRemainder);
                     recyclerView.setLayoutManager(mLayoutManager);
                     recyclerView.setItemAnimator(new DefaultItemAnimator());
                     recyclerView.setAdapter(customAdapter);
@@ -158,5 +169,39 @@ public class MainListActivity extends AppCompatActivity {
             }
         }
         super.onActivityResult(requestCode, resultCode, data);
+    }
+
+    public void DeleteRow(String id, int position) {
+        Log.e(TAG, "delete id: " + id);
+        Log.e(TAG, "delete position: " + position);
+
+        detailOfRemainder.remove(position);
+        customAdapter.notifyDataSetChanged();
+
+        Toast.makeText(MainListActivity.this, "Remainder Deleted", Toast.LENGTH_SHORT).show();
+
+        if (detailOfRemainder.size() == 0) {
+            if (textView_noMessage != null) {
+                textView_noMessage.setVisibility(View.VISIBLE);
+            }
+        }
+
+        UnsetRemainder(id, DeleteRemainder(id));
+    }
+
+    private void UnsetRemainder(String id, int delId) {
+        if (delId == 1) {
+            Intent intent = new Intent(MainListActivity.this, AlarmReceiver.class);
+            PendingIntent pendingIntent = PendingIntent.getBroadcast(AppController.getContext(), Integer.parseInt(id), intent, 0);
+            AlarmManager manager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
+            manager.cancel(pendingIntent);
+            pendingIntent.cancel();
+        } else {
+            Toast.makeText(MainListActivity.this, "Something Went Wrong", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    private int DeleteRemainder(String id) {
+        return dbHelper.deleteRemainder(id);
     }
 }

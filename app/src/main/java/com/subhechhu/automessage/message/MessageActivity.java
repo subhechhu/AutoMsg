@@ -210,7 +210,7 @@ public class MessageActivity extends AppCompatActivity {
         long remainderTimeMills = Long.parseLong(details.getTimelong());
         SimpleDateFormat format = new SimpleDateFormat("EEE MMM dd yyyy HH:mm:ss ");
         String date = format.format(new Date(remainderTimeMills));
-        pendingIntent = PendingIntent.getBroadcast(getApplicationContext(), Integer.parseInt(details.getId()), intent, 0);
+        pendingIntent = PendingIntent.getBroadcast(AppController.getContext(), Integer.parseInt(details.getId()), intent, 0);
 
         AlarmManager manager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
         manager.set(AlarmManager.RTC_WAKEUP, remainderTimeMills, pendingIntent);

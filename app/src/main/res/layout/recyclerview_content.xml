@@ -7,6 +7,7 @@
     android:padding="@dimen/text_16"
     android:layout_margin="@dimen/padding_5"
     android:background="@color/white">
+
     <LinearLayout
         android:orientation="horizontal"
         android:layout_width="match_parent"
@@ -84,6 +85,7 @@
                 android:text="asdasd" />
         </LinearLayout>
     </LinearLayout>
+
     <View
         android:layout_width="match_parent"
         android:layout_height="1dp"
@@ -91,6 +93,7 @@
         android:layout_marginTop="@dimen/padding_5"
         android:layout_marginBottom="@dimen/padding_5"
         />
+
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -99,5 +102,16 @@
         android:id="@+id/textview_msg"
         android:layout_marginTop="@dimen/padding_5"
         android:layout_marginBottom="@dimen/padding_5" />
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="25dp">
+
+        <Button
+            android:layout_width="25dp"
+            android:layout_height="25dp"
+            android:background="@drawable/delete"
+            android:id="@+id/imageView_deleteRow" />
+    </RelativeLayout>
 
 </LinearLayout>
