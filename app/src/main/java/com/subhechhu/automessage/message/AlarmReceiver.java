@@ -7,6 +7,7 @@ import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.net.Uri;
 import android.telephony.SmsManager;
 import android.util.Log;
 
@@ -44,16 +45,29 @@ public class AlarmReceiver extends BroadcastReceiver {
             if (medium.equals("Messenger")) {
                 MessengerAction(context, name, message, id, number);
             } else if (medium.equals("Whatsapp")) {
-                WhatsappAction(context, name, message, id);
+                WhatsappAction(context, name, message, id, medium);
+            } else if (medium.equals("Viber")) {
+                ViberAction(context, name, message, id, medium);
             }
         }
     }
 
-    private void WhatsappAction(Context context, String name, String message, String id) {
+    private void ViberAction(Context context, String name, String message, String id, String medium) {
         Intent intent1 = new Intent(context, DialogClass.class);
         intent1.putExtra("id", id);
         intent1.putExtra("name", name);
         intent1.putExtra("message", message);
+        intent1.putExtra("medium", medium);
+        intent1.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        context.startActivity(intent1);
+    }
+
+    private void WhatsappAction(Context context, String name, String message, String id, String medium) {
+        Intent intent1 = new Intent(context, DialogClass.class);
+        intent1.putExtra("id", id);
+        intent1.putExtra("name", name);
+        intent1.putExtra("message", message);
+        intent1.putExtra("medium", medium);
         intent1.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         context.startActivity(intent1);
     }

@@ -26,6 +26,8 @@ public class DialogClass extends AppCompatActivity {
     Button proceed;
     String sourceString, sourceStringNumber;
 
+    String mediumText;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -41,9 +43,10 @@ public class DialogClass extends AppCompatActivity {
 
         String name = intent.getStringExtra("name");
         final String message = intent.getStringExtra("message");
+        final String medium = intent.getStringExtra("medium");
 
         try {
-            sourceString = "Whatsapp Messsage Remainder" + "<br><br><b>" + name + "</b>";
+            sourceString = medium + " Messsage Remainder" + "<br><br><b>" + name + "</b>";
             sourceStringNumber = "\n<b>Message: </b> \n" + message;
             if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.N) {
                 textView.setText(Html.fromHtml(sourceString, Html.FROM_HTML_MODE_LEGACY));
@@ -61,9 +64,23 @@ public class DialogClass extends AppCompatActivity {
         proceed.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                whatsappIntent(message);
+                if(medium.equalsIgnoreCase("Whatsapp")){
+                    whatsappIntent(message);   
+                }else if(medium.equalsIgnoreCase("Viber")) {
+                    viberIntent(message);
+                }
             }
         });
+    }
+
+    private void viberIntent(String message) {
+        Intent vIntent = new Intent(Intent.ACTION_SEND);
+        vIntent.setPackage("com.viber.voip");
+        vIntent.setType("text/plain");
+        vIntent.putExtra(Intent.EXTRA_TEXT, message);
+        startActivity(vIntent);
+        finish();
+
     }
 
     private void whatsappIntent(String message) {

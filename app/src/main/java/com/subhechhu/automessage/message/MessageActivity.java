@@ -49,6 +49,7 @@ public class MessageActivity extends AppCompatActivity {
 
     final int MESSENGER_POSITION = 0;
     final int WHATSAPP_POSITION = 1;
+    final int VIBER_POSITION = 2;
 
     boolean STATE_CONTACT_ADDED, STATE_DATE_ADDED,
             STATE_TIME_ADDED, STATE_MESSAGE_ADDED, STATE_MEDIUM_SELECTED;
@@ -85,8 +86,8 @@ public class MessageActivity extends AppCompatActivity {
 
         spinnerMedium = (Spinner) findViewById(R.id.spinner_medium);
 
-        appIcons = new int[]{R.drawable.message_icon, R.drawable.whatsapp_icon};
-        appName = new String[]{"Messenger", "Whatsapp"};
+        appIcons = new int[]{R.drawable.message_icon, R.drawable.whatsapp_icon, R.drawable.viber};
+        appName = new String[]{"Messenger", "Whatsapp", "Viber"};
 
         userNameTV = (TextView) findViewById(R.id.textView_userName);
         dateTV = (TextView) findViewById(R.id.textView_date);
@@ -116,7 +117,7 @@ public class MessageActivity extends AppCompatActivity {
                             SendMessage(recipientNumber, recipientName, currentTimeLong, message);
                         }
                     } else {
-                        Toast.makeText(MessageActivity.this, "WhatsApp not Found in Your Device", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(MessageActivity.this, "Selected Medium Not Found in Your Device", Toast.LENGTH_SHORT).show();
                     }
                 } else {
                     Toast.makeText(MessageActivity.this, "Fields Cannot Be Left Blank!", Toast.LENGTH_SHORT).show();
@@ -143,6 +144,11 @@ public class MessageActivity extends AppCompatActivity {
                         STATE_MEDIUM_SELECTED = true;
                         setDescription(position);
                         break;
+                    case VIBER_POSITION:
+                        mediumSelected = "Viber";
+                        STATE_MEDIUM_SELECTED = CheckApp(mediumSelected);
+                        setDescription(position);
+                        break;
                 }
             }
 
@@ -157,13 +163,15 @@ public class MessageActivity extends AppCompatActivity {
         String app = null;
         if (medium.equals("Whatsapp")) {
             app = "com.whatsapp";
+        } else if (medium.equalsIgnoreCase("Viber")) {
+            app = "com.viber.voip";
         }
         PackageManager pm = getPackageManager();
         try {
             PackageInfo info = pm.getPackageInfo(app, PackageManager.GET_META_DATA);
             return true;
         } catch (PackageManager.NameNotFoundException e) {
-            Toast.makeText(this, "WhatsApp not Found in Your Device", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, medium + " not Found in Your Device", Toast.LENGTH_SHORT).show();
             return false;
         }
     }
@@ -234,7 +242,6 @@ public class MessageActivity extends AppCompatActivity {
         SimpleDateFormat format = new SimpleDateFormat("EEE MMM dd yyyy HH:mm:ss ");
         String date = format.format(new Date(remainderTimeMills));
         pendingIntent = PendingIntent.getBroadcast(AppController.getContext(), Integer.parseInt(details.getId()), intent, 0);
-
         AlarmManager manager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
         manager.set(AlarmManager.RTC_WAKEUP, remainderTimeMills, pendingIntent);
         Toast.makeText(this, "Message Remainder is set for " + date, Toast.LENGTH_SHORT).show();
@@ -382,7 +389,6 @@ public class MessageActivity extends AppCompatActivity {
         selectedCalenderInstance.set(Calendar.DAY_OF_MONTH, dayOfMonth);
 
         long currentTimeLong = selectedCalenderInstance.getTimeInMillis();
-
         displayDate = new SimpleDateFormat("dd MMMM yyyy").format(new Date(currentTimeLong));
 
         if (selectedCalenderInstance.before(currentCalenderInstance)) {
@@ -455,7 +461,6 @@ public class MessageActivity extends AppCompatActivity {
                 dialog.dismiss();
             }
         });
-
         proceedBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

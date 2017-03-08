@@ -22,8 +22,7 @@ import java.util.List;
 
 class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.MyViewHolder> {
     private java.util.List<Details> detailsList;
-    Context context;
-    Calendar currentCalendar, remainderCalendar;
+    private Context context;
 
     CustomAdapter(Context context, List<Details> detailsList) {
         this.detailsList = detailsList;
@@ -65,10 +64,16 @@ class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.MyViewHolder> {
         holder.timeTV.setText(details.getTime());
         holder.messageTV.setText(details.getMessage());
 
-        if (details.getMediumSelected().equals("Messenger")) {
-            holder.button_messenger.setBackgroundResource(R.drawable.message_icon);
-        } else if (details.getMediumSelected().equals("Whatsapp")) {
-            holder.button_messenger.setBackgroundResource(R.drawable.whatsapp_icon);
+        switch (details.getMediumSelected()) {
+            case "Messenger":
+                holder.button_messenger.setBackgroundResource(R.drawable.message_icon);
+                break;
+            case "Whatsapp":
+                holder.button_messenger.setBackgroundResource(R.drawable.whatsapp_icon);
+                break;
+            case "Viber":
+                holder.button_messenger.setBackgroundResource(R.drawable.viber);
+                break;
         }
         holder.button_deleteRow.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -78,8 +83,8 @@ class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.MyViewHolder> {
         });
         Log.e("subhechhudev", "time: " + details.getTimelong());
 
-        currentCalendar = Calendar.getInstance();
-        remainderCalendar = Calendar.getInstance();
+        Calendar currentCalendar = Calendar.getInstance();
+        Calendar remainderCalendar = Calendar.getInstance();
         remainderCalendar.setTimeInMillis(Long.parseLong(details.getTimelong()));
 
         if (currentCalendar.after(remainderCalendar)) {
