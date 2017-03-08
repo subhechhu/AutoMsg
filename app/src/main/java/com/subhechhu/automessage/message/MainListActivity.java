@@ -105,6 +105,7 @@ public class MainListActivity extends AppCompatActivity {
                     mydetail.setTime(cursor.getString(4));
                     mydetail.setMessage(cursor.getString(5));
                     mydetail.setMediumSelected(cursor.getString(6));
+                    mydetail.setTimelong(cursor.getString(7));
                     detailOfRemainder.add(mydetail);
                 } while (cursor.moveToPrevious());
                 textView_noMessage.setVisibility(View.GONE);

@@ -7,6 +7,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.subhechhu.automessage.Details;
@@ -32,6 +33,7 @@ class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.MyViewHolder> {
     class MyViewHolder extends RecyclerView.ViewHolder {
         TextView nameTV, numberTV, dateTV, timeTV, messageTV;
         Button button_messenger, button_deleteRow;
+        LinearLayout linearLayout_main;
 
         MyViewHolder(View view) {
             super(view);
@@ -42,6 +44,7 @@ class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.MyViewHolder> {
             messageTV = (TextView) itemView.findViewById(R.id.textview_msg);
             button_messenger = (Button) itemView.findViewById(R.id.button_messenger);
             button_deleteRow = (Button) itemView.findViewById(R.id.imageView_deleteRow);
+            linearLayout_main = (LinearLayout) itemView.findViewById(R.id.linearLayout_main);
         }
     }
 
@@ -73,6 +76,18 @@ class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.MyViewHolder> {
                 ((MainListActivity) context).DeleteRow(details.getId(), pos);
             }
         });
+        Log.e("subhechhudev", "time: " + details.getTimelong());
+
+        currentCalendar = Calendar.getInstance();
+        remainderCalendar = Calendar.getInstance();
+        remainderCalendar.setTimeInMillis(Long.parseLong(details.getTimelong()));
+
+        if (currentCalendar.after(remainderCalendar)) {
+            holder.linearLayout_main.setBackgroundColor(context.getResources().getColor(R.color.light_grey)); //past
+        } else {
+            holder.linearLayout_main.setBackgroundColor(context.getResources().getColor(R.color.white));
+        }
+
     }
 
     @Override

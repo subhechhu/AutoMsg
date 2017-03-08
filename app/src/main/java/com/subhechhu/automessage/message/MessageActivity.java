@@ -10,6 +10,7 @@ import android.content.ContentResolver;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.os.Build;
@@ -49,7 +50,8 @@ public class MessageActivity extends AppCompatActivity {
     final int MESSENGER_POSITION = 0;
     final int WHATSAPP_POSITION = 1;
 
-    boolean STATE_CONTACT_ADDED, STATE_DATE_ADDED, STATE_TIME_ADDED, STATE_MESSAGE_ADDED;
+    boolean STATE_CONTACT_ADDED, STATE_DATE_ADDED,
+            STATE_TIME_ADDED, STATE_MESSAGE_ADDED, STATE_MEDIUM_SELECTED;
 
     TextView userNameTV, dateTV, timeTV, messageTV, descrptionTV;
     long currentTimeLong;
@@ -105,12 +107,16 @@ public class MessageActivity extends AppCompatActivity {
                         STATE_DATE_ADDED &&
                         STATE_TIME_ADDED &&
                         STATE_MESSAGE_ADDED) {
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M &&
-                            ContextCompat.checkSelfPermission(MessageActivity.this, Manifest.permission.SEND_SMS) !=
-                                    PackageManager.PERMISSION_GRANTED) {
-                        requestPermissions(new String[]{Manifest.permission.SEND_SMS}, SEND_SMS);
+                    if (STATE_MEDIUM_SELECTED) {
+                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M &&
+                                ContextCompat.checkSelfPermission(MessageActivity.this, Manifest.permission.SEND_SMS) !=
+                                        PackageManager.PERMISSION_GRANTED) {
+                            requestPermissions(new String[]{Manifest.permission.SEND_SMS}, SEND_SMS);
+                        } else {
+                            SendMessage(recipientNumber, recipientName, currentTimeLong, message);
+                        }
                     } else {
-                        SendMessage(recipientNumber, recipientName, currentTimeLong, message);
+                        Toast.makeText(MessageActivity.this, "WhatsApp not Found in Your Device", Toast.LENGTH_SHORT).show();
                     }
                 } else {
                     Toast.makeText(MessageActivity.this, "Fields Cannot Be Left Blank!", Toast.LENGTH_SHORT).show();
@@ -129,10 +135,12 @@ public class MessageActivity extends AppCompatActivity {
                 switch (position) {
                     case WHATSAPP_POSITION:
                         mediumSelected = "Whatsapp";
+                        STATE_MEDIUM_SELECTED = CheckApp(mediumSelected);
                         setDescription(position);
                         break;
                     case MESSENGER_POSITION:
                         mediumSelected = "Messenger";
+                        STATE_MEDIUM_SELECTED = true;
                         setDescription(position);
                         break;
                 }
@@ -143,6 +151,21 @@ public class MessageActivity extends AppCompatActivity {
 
             }
         });
+    }
+
+    private Boolean CheckApp(String medium) {
+        String app = null;
+        if (medium.equals("Whatsapp")) {
+            app = "com.whatsapp";
+        }
+        PackageManager pm = getPackageManager();
+        try {
+            PackageInfo info = pm.getPackageInfo(app, PackageManager.GET_META_DATA);
+            return true;
+        } catch (PackageManager.NameNotFoundException e) {
+            Toast.makeText(this, "WhatsApp not Found in Your Device", Toast.LENGTH_SHORT).show();
+            return false;
+        }
     }
 
     private void SendMessage(String recipientNumber, String recipientName, long currentTimeLong, String message) {
