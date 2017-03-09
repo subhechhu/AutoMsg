@@ -5,6 +5,7 @@
     <uses-permission android:name="android.permission.SEND_SMS" />
     <uses-permission android:name="android.permission.READ_CONTACTS" />
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
+    <uses-permission android:name="android.permission.INTERNET" />
 
     <application
         android:name=".AppController"
@@ -36,6 +37,8 @@
             android:name=".DialogClass"
             android:launchMode="singleInstance"
             android:theme="@style/Theme.AppCompat.Light.Dialog" />
+        <activity android:name=".AbtActivity" />
+        <activity android:name=".Gmail.SendMailActivity" />
 
         <service android:name=".message.RebootService" />
 
@@ -46,8 +49,6 @@
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </receiver>
-
-        <activity android:name=".AbtActivity"></activity>
     </application>
 
 </manifest>

@@ -31,7 +31,7 @@
                 android:textColor="@color/colorLightText"
                 android:id="@+id/textview_userName"
                 android:textSize="@dimen/text_17"
-                android:text="aasd" />
+                android:text="AchhutanKutty Venugopala" />
 
             <LinearLayout
                 android:orientation="horizontal"
@@ -76,8 +76,8 @@
                 android:layout_height="wrap_content"
                 android:id="@+id/textview_date"
                 android:textSize="@dimen/text_14"
-                android:gravity="center"
-                android:text="asdasd" />
+                android:gravity="end"
+                android:text="14 March, 2017 " />
 
             <TextView
                 android:layout_width="wrap_content"

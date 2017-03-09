@@ -158,7 +158,7 @@ public class InfoActivity extends AppCompatActivity implements InfoFragment.OnSu
             case "proceed":
                 if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
                     sharedPrefUtil.setSharedPreferenceBoolean(AppController.getContext(), "newApp", false);
-                    startActivity(new Intent(InfoActivity.this, LoginActivity.class));
+                    startActivity(new Intent(InfoActivity.this, MainListActivity.class));
                     finish();
                 } else {
                     if (contactPermission && smsPermission) {

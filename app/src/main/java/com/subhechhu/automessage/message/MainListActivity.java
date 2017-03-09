@@ -26,6 +26,8 @@ import com.subhechhu.automessage.R;
 import com.subhechhu.automessage.SharedPrefUtil;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 public class MainListActivity extends AppCompatActivity {
@@ -90,7 +92,7 @@ public class MainListActivity extends AppCompatActivity {
         try {
             Cursor cursor = dbHelper.getAllRemainders();
 
-            Log.e("devsubhechhu","all remainder: "+cursor.getCount());
+            Log.e("devsubhechhu", "all remainder: " + cursor.getCount());
 //            for (int i = 0; i < cursor.getColumnCount(); i++) {
 //                Log.e(TAG, "buhahahaha " + cursor.getColumnName(i));
 //                Log.e(TAG, "buhahahaha name: " + cursor.getString(i));
@@ -109,6 +111,14 @@ public class MainListActivity extends AppCompatActivity {
                     detailOfRemainder.add(mydetail);
                 } while (cursor.moveToPrevious());
                 textView_noMessage.setVisibility(View.GONE);
+
+                Collections.sort(detailOfRemainder, new Comparator<Details>() {
+                    @Override
+                    public int compare(Details o1, Details o2) {
+                        return Long.compare(Long.parseLong(o2.getTimelong()),
+                                Long.parseLong(o1.getTimelong()));
+                    }
+                });
 
                 if (customAdapter == null) {
                     RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(MainListActivity.this);
@@ -130,6 +140,8 @@ public class MainListActivity extends AppCompatActivity {
 
     private void ChooseMedium() {
         Intent intent = new Intent(MainListActivity.this, MessageActivity.class);
+//        Intent intent = new Intent(MainListActivity.this, SendMailActivity.class);
+//        startActivity(intent);
         startActivityForResult(intent, NEW_MESSAGE);
     }
 
