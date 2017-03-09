@@ -9,12 +9,16 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.telephony.SmsManager;
+import android.telephony.SubscriptionInfo;
+import android.telephony.SubscriptionManager;
 import android.util.Log;
 
 import com.subhechhu.automessage.AppController;
 import com.subhechhu.automessage.DialogClass;
 import com.subhechhu.automessage.R;
 import com.subhechhu.automessage.SharedPrefUtil;
+
+import java.util.List;
 
 import static android.content.Context.NOTIFICATION_SERVICE;
 
@@ -24,6 +28,7 @@ import static android.content.Context.NOTIFICATION_SERVICE;
 
 public class AlarmReceiver extends BroadcastReceiver {
     SharedPrefUtil sharedPrefUtil;
+    public static List<SubscriptionInfo> subInfoList;
 
     @Override
     public void onReceive(Context context, Intent intent) {
@@ -41,9 +46,10 @@ public class AlarmReceiver extends BroadcastReceiver {
             String message = intent.getStringExtra("message");
             String id = intent.getStringExtra("id");
             String medium = intent.getStringExtra("medium");
+            String simSelected = intent.getStringExtra("simSelected");
 
             if (medium.equals("Messenger")) {
-                MessengerAction(context, name, message, id, number);
+                MessengerAction(context, name, message, id, number, simSelected);
             } else if (medium.equals("Whatsapp")) {
                 WhatsappAction(context, name, message, id, medium);
             } else if (medium.equals("Viber")) {
@@ -72,7 +78,8 @@ public class AlarmReceiver extends BroadcastReceiver {
         context.startActivity(intent1);
     }
 
-    private void MessengerAction(Context context, String name, String message, String id, String number) {
+    private void MessengerAction(Context context, String name, String message, String id, String number, String simSelected) {
+        int i;
         int notificationCount;
         sharedPrefUtil = new SharedPrefUtil();
         String messageTitle, messageText;
@@ -82,8 +89,20 @@ public class AlarmReceiver extends BroadcastReceiver {
 
         sharedPrefUtil.setSharedPreferenceInt(AppController.getContext(), "notificationCount", notificationCount);
 
-        SmsManager smsManager = SmsManager.getDefault();
-        smsManager.sendTextMessage(number, null, message, null, null);
+        if (simSelected.equals("Sim1")) {
+            i = 0;
+        } else {
+            i = 1;
+        }
+        SubscriptionManager mSubscriptionManager = SubscriptionManager.from(context);
+        subInfoList = mSubscriptionManager.getActiveSubscriptionInfoList();
+
+        SmsManager sm = SmsManager.getSmsManagerForSubscriptionId(mSubscriptionManager.
+                getActiveSubscriptionInfoList().get(i).getSubscriptionId());
+        sm.sendTextMessage(number, null, message, null, null);
+
+//        SmsManager smsManager = SmsManager.getDefault();
+//        smsManager.sendTextMessage(number, sender, message, null, null);
 
         Intent intent2 = new Intent(context, MainListActivity.class);
         PendingIntent pIntent = PendingIntent.getActivity(context, Integer.parseInt(id), intent2, 0);

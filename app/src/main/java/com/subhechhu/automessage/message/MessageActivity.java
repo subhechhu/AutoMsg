@@ -21,6 +21,8 @@ import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.telephony.SubscriptionInfo;
+import android.telephony.SubscriptionManager;
 import android.text.Html;
 import android.util.Log;
 import android.view.View;
@@ -30,6 +32,8 @@ import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.TimePicker;
@@ -38,11 +42,13 @@ import android.widget.Toast;
 import com.subhechhu.automessage.AppController;
 import com.subhechhu.automessage.Details;
 import com.subhechhu.automessage.R;
+import com.subhechhu.automessage.SharedPrefUtil;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashSet;
+import java.util.List;
 
 public class MessageActivity extends AppCompatActivity {
     String TAG = getClass().getSimpleName();
@@ -61,21 +67,33 @@ public class MessageActivity extends AppCompatActivity {
     private static final int READ_CONTACTS_PERMISSIONS_REQUEST = 999;
     private static final int SEND_SMS = 888;
 
+    public static SubscriptionManager mSubscriptionManager;
+    public static List<SubscriptionInfo> subInfoList;
+
     SpinnerAdapter spinnerAdapter;
     int[] appIcons;
     String[] appName;
 
     Spinner spinnerMedium;
-    String mediumSelected, recipientNumber, recipientName, message, displayTime, displayDate;
+    String mediumSelected, recipientNumber, recipientName, message, displayTime, displayDate, senderNumber;
+    //    EditText editText_senderphone;
     Button saveBtn;
+
+    RadioButton sim1, sim2;
+    RadioGroup simGrp;
+
+    int simCount;
 
     HashSet<String> phoneNumbers;
 
     Calendar selectedCalenderInstance;
     Dialog dialog;
 
-    boolean isNewMessage;
+    boolean isNewMessage, isChecked;
+    String simSelected = "Sim1";
     DBhelper dbHelper;
+
+    SharedPrefUtil sharedPrefUtil;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -84,7 +102,10 @@ public class MessageActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
+        sharedPrefUtil = new SharedPrefUtil();
+
         spinnerMedium = (Spinner) findViewById(R.id.spinner_medium);
+        simCount = sharedPrefUtil.getSharedPreferenceInt(AppController.getContext(), "simCount", 1);
 
         appIcons = new int[]{R.drawable.message_icon, R.drawable.whatsapp_icon, R.drawable.viber};
         appName = new String[]{"Messenger", "Whatsapp", "Viber"};
@@ -94,6 +115,31 @@ public class MessageActivity extends AppCompatActivity {
         timeTV = (TextView) findViewById(R.id.textView_time);
         messageTV = (TextView) findViewById(R.id.textView_message);
         descrptionTV = (TextView) findViewById(R.id.textView_description);
+
+        isChecked = false;
+        sim1 = (RadioButton) findViewById(R.id.radio_sim1);
+        sim2 = (RadioButton) findViewById(R.id.radio_sim2);
+        simGrp = (RadioGroup) findViewById(R.id.radioSim);
+
+        if (simCount > 1) {
+            isChecked = false;
+            simGrp.setVisibility(View.VISIBLE);
+        } else {
+            isChecked = true;
+            simGrp.setVisibility(View.GONE);
+        }
+
+        simGrp.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(RadioGroup group, int checkedId) {
+                isChecked = true;
+                if (checkedId == R.id.radio_sim1) {
+                    simSelected = "Sim1";
+                } else {
+                    simSelected = "Sim2";
+                }
+            }
+        });
 
         saveBtn = (Button) findViewById(R.id.button_save);
 
@@ -107,20 +153,21 @@ public class MessageActivity extends AppCompatActivity {
                 if (STATE_CONTACT_ADDED &&
                         STATE_DATE_ADDED &&
                         STATE_TIME_ADDED &&
-                        STATE_MESSAGE_ADDED) {
+                        STATE_MESSAGE_ADDED &&
+                        isChecked) {
                     if (STATE_MEDIUM_SELECTED) {
                         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M &&
                                 ContextCompat.checkSelfPermission(MessageActivity.this, Manifest.permission.SEND_SMS) !=
                                         PackageManager.PERMISSION_GRANTED) {
                             requestPermissions(new String[]{Manifest.permission.SEND_SMS}, SEND_SMS);
                         } else {
-                            SendMessage(recipientNumber, recipientName, currentTimeLong, message);
+                            SendMessage(recipientNumber, recipientName, currentTimeLong, message, simCount, simSelected);
                         }
                     } else {
                         Toast.makeText(MessageActivity.this, "Selected Medium Not Found in Your Device", Toast.LENGTH_SHORT).show();
                     }
                 } else {
-                    Toast.makeText(MessageActivity.this, "Fields Cannot Be Left Blank!", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(MessageActivity.this, "Fields Cannot Be Left Blank or UnChecked!", Toast.LENGTH_SHORT).show();
                 }
             }
         });
@@ -159,6 +206,13 @@ public class MessageActivity extends AppCompatActivity {
         });
     }
 
+    private int GetCarriorsInformation() {
+//        sims = new ArrayList<Integer>();
+        mSubscriptionManager = SubscriptionManager.from(MessageActivity.this);
+        subInfoList = mSubscriptionManager.getActiveSubscriptionInfoList();
+        return subInfoList.size();
+    }
+
     private Boolean CheckApp(String medium) {
         String app = null;
         if (medium.equals("Whatsapp")) {
@@ -168,7 +222,7 @@ public class MessageActivity extends AppCompatActivity {
         }
         PackageManager pm = getPackageManager();
         try {
-            PackageInfo info = pm.getPackageInfo(app, PackageManager.GET_META_DATA);
+            pm.getPackageInfo(app, PackageManager.GET_META_DATA);
             return true;
         } catch (PackageManager.NameNotFoundException e) {
             Toast.makeText(this, medium + " not Found in Your Device", Toast.LENGTH_SHORT).show();
@@ -176,17 +230,20 @@ public class MessageActivity extends AppCompatActivity {
         }
     }
 
-    private void SendMessage(String recipientNumber, String recipientName, long currentTimeLong, String message) {
+    private void SendMessage(String recipientNumber, String recipientName,
+                             long currentTimeLong, String message, int simCount, String simSelected) {
         Calendar currentCalendarInstance = Calendar.getInstance();
         if (selectedCalenderInstance.before(currentCalendarInstance)) {
             Toast.makeText(MessageActivity.this, "Invalid Date/Time detected. Please Enter the Valid Date/Time", Toast.LENGTH_SHORT).show();
         } else {
-            SavedData(recipientName, recipientNumber, displayTime, displayDate, currentTimeLong, message);
+            SavedData(recipientName, recipientNumber, displayTime, displayDate,
+                    currentTimeLong, message, simCount, simSelected);
         }
     }
 
     private void SavedData(String recipientName, String recipientNumber,
-                           String displayTime, String displayDate, long currentTimeLong, String message) {
+                           String displayTime, String displayDate, long currentTimeLong, String message,
+                           int simCount, String simSelected) {
         Long recentId;
         Details details = new Details();
         details.setName(recipientName);
@@ -196,6 +253,8 @@ public class MessageActivity extends AppCompatActivity {
         details.setMessage(message);
         details.setMediumSelected(mediumSelected);
         details.setTimelong("" + currentTimeLong);
+        details.setSimSelected(simSelected);
+        details.setSimCount(simCount);
 
         recentId = dbHelper.addRemainder(details);
         details.setId(String.valueOf(recentId));
@@ -237,6 +296,8 @@ public class MessageActivity extends AppCompatActivity {
         intent.putExtra("message", details.getMessage());
         intent.putExtra("longDate", details.getTimelong());
         intent.putExtra("medium", details.getMediumSelected());
+        intent.putExtra("simSelected", details.getSimSelected());
+        intent.putExtra("simCount", details.getSimCount());
 
         long remainderTimeMills = Long.parseLong(details.getTimelong());
         SimpleDateFormat format = new SimpleDateFormat("EEE MMM dd yyyy HH:mm:ss ");
@@ -521,7 +582,7 @@ public class MessageActivity extends AppCompatActivity {
             }
         } else if (requestCode == SEND_SMS) {
             if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                SendMessage(recipientNumber, recipientName, currentTimeLong, message);
+                SendMessage(recipientNumber, recipientName, currentTimeLong, message, simCount, senderNumber);
             } else {
                 Toast.makeText(MessageActivity.this, "Message Permission denied.", Toast.LENGTH_SHORT).show();
             }

@@ -22,7 +22,9 @@ public class DBhelper extends SQLiteOpenHelper {
     private static final String COLUMN_TIME = "timeTV";
     private static final String COLUMN_MESSAGE = "messageTV";
     private static final String COLUMN_MEDIUM = "medium";
-    private static final String COLUMN_TIMELONG = "isActive";
+    private static final String COLUMN_TIMELONG = "timeLong";
+    private static final String COLUMN_SENDER = "sender";
+    private static final String COLUMN_SIMCOUNT = "simCount";
 
     private static final String DATABASE_NAME = "automessage.db";
 
@@ -35,11 +37,13 @@ public class DBhelper extends SQLiteOpenHelper {
             + COLUMN_TIME + " text not null, "
             + COLUMN_MESSAGE + " text not null, "
             + COLUMN_MEDIUM + " text not null, "
-            + COLUMN_TIMELONG + " text not null"
+            + COLUMN_TIMELONG + " text not null,"
+            + COLUMN_SENDER + " text not null,"
+            + COLUMN_SIMCOUNT + " integer not null"
             + ");";
 
     DBhelper(Context context) {
-        super(context, DATABASE_NAME, null, 2);
+        super(context, DATABASE_NAME, null, 6);
     }
 
     @Override
@@ -70,6 +74,8 @@ public class DBhelper extends SQLiteOpenHelper {
             values.put(COLUMN_MESSAGE, details.getMessage());
             values.put(COLUMN_MEDIUM, details.getMediumSelected());
             values.put(COLUMN_TIMELONG, "" + details.getTimelong());
+            values.put(COLUMN_SENDER, "" + details.getSimSelected());
+            values.put(COLUMN_SIMCOUNT, "" + details.getSimCount());
 
             id = db.insert(TABLE_NAME, null, values);
         } catch (Exception e) {

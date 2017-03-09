@@ -1,8 +1,12 @@
 package com.subhechhu.automessage.Info;
 
 import android.Manifest;
+import android.app.Dialog;
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -11,17 +15,22 @@ import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
+import android.telephony.SubscriptionInfo;
+import android.telephony.SubscriptionManager;
+import android.util.Log;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.Button;
 import android.widget.Toast;
 
+import com.kirianov.multisim.MultiSimTelephonyManager;
 import com.pixelcan.inkpageindicator.InkPageIndicator;
 import com.subhechhu.automessage.AppController;
 import com.subhechhu.automessage.R;
 import com.subhechhu.automessage.SharedPrefUtil;
-import com.subhechhu.automessage.login.LoginActivity;
 import com.subhechhu.automessage.message.MainListActivity;
+import com.subhechhu.automessage.message.MessageActivity;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -31,13 +40,17 @@ public class InfoActivity extends AppCompatActivity implements InfoFragment.OnSu
     String TAG = getClass().getSimpleName();
     private static final int READ_CONTACTS_PERMISSIONS_REQUEST = 999;
     private static final int SEND_SMS_PERMISSION_REQUEST = 888;
+    private static final int READ_PHONE_STATE_PERMISSION_REQUEST = 777;
 
     ViewPagerAdapter pageAdapter;
     ViewPager viewPager;
     InkPageIndicator inkPageIndicator;
     View mainLayout;
 
-    boolean contactPermission = false, smsPermission = false;
+    public static SubscriptionManager mSubscriptionManager;
+    public static List<SubscriptionInfo> subInfoList;
+
+    boolean contactPermission = false, smsPermission = false, phonePermission = false;
     SharedPrefUtil sharedPrefUtil;
 
     @Override
@@ -85,6 +98,18 @@ public class InfoActivity extends AppCompatActivity implements InfoFragment.OnSu
         }
     }
 
+    private void GetPhonePermission() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M &&
+                ContextCompat.checkSelfPermission(this, Manifest.permission.READ_PHONE_STATE) !=
+                        PackageManager.PERMISSION_GRANTED) {
+            requestPermissions(new String[]{Manifest.permission.READ_PHONE_STATE},
+                    READ_PHONE_STATE_PERMISSION_REQUEST);
+        } else {
+            phonePermission = true;
+            Toast.makeText(InfoActivity.this, "Phone State Permission Already Granted", Toast.LENGTH_SHORT).show();
+        }
+    }
+
     private void SMSSnackBar(boolean isPermitted) {
         if (isPermitted) {
             Snackbar.make(mainLayout, getText(R.string.permission_granted), Snackbar.LENGTH_SHORT).show();
@@ -98,6 +123,21 @@ public class InfoActivity extends AppCompatActivity implements InfoFragment.OnSu
                     }).show();
         }
     }
+
+    private void PhoneSnackBar(boolean isPermitted) {
+        if (isPermitted) {
+            Snackbar.make(mainLayout, getText(R.string.permission_granted), Snackbar.LENGTH_SHORT).show();
+        } else {
+            Snackbar.make(mainLayout, getText(R.string.permission_request_state_read), Snackbar.LENGTH_LONG)
+                    .setAction(getText(R.string.permit), new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            GetPhonePermission();
+                        }
+                    }).show();
+        }
+    }
+
 
     private void GetContactPermission() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M &&
@@ -143,6 +183,14 @@ public class InfoActivity extends AppCompatActivity implements InfoFragment.OnSu
                 smsPermission = false;
                 SMSSnackBar(false);
             }
+        } else if (requestCode == READ_PHONE_STATE_PERMISSION_REQUEST) {
+            if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                phonePermission = true;
+                PhoneSnackBar(true);
+            } else {
+                phonePermission = false;
+                PhoneSnackBar(false);
+            }
         }
     }
 
@@ -155,25 +203,57 @@ public class InfoActivity extends AppCompatActivity implements InfoFragment.OnSu
             case "sms":
                 GetSMSPermission();
                 break;
+            case "phone":
+                GetPhonePermission();
+                break;
             case "proceed":
                 if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
-                    sharedPrefUtil.setSharedPreferenceBoolean(AppController.getContext(), "newApp", false);
-                    startActivity(new Intent(InfoActivity.this, MainListActivity.class));
-                    finish();
+                    checkSim();
                 } else {
-                    if (contactPermission && smsPermission) {
-                        sharedPrefUtil.setSharedPreferenceBoolean(AppController.getContext(), "newApp", false);
-                        startActivity(new Intent(InfoActivity.this, MainListActivity.class));
-                        finish();
-                    } else if (!contactPermission && !smsPermission) {
-                        Toast.makeText(InfoActivity.this, "Please Provide Permissions To Continue", Toast.LENGTH_SHORT).show();
-                    } else if (!smsPermission) {
-                        Toast.makeText(InfoActivity.this, "Please Provide SMS Permission To Continue", Toast.LENGTH_SHORT).show();
-                    } else if (!contactPermission) {
-                        Toast.makeText(InfoActivity.this, "Please Provide Contact Permission To Continue", Toast.LENGTH_SHORT).show();
+                    if (contactPermission && smsPermission && phonePermission) { //
+                        checkSim();
+//                        sharedPrefUtil.setSharedPreferenceBoolean(AppController.getContext(), "newApp", false);
+//                        startActivity(new Intent(InfoActivity.this, MainListActivity.class));
+//                        finish();
+                    } else if (!contactPermission || !smsPermission || !phonePermission) { //phonePermission
+                        Toast.makeText(InfoActivity.this, "Please Provide all the Permissions To Continue", Toast.LENGTH_SHORT).show();
                     }
+//                    else if (!smsPermission) {
+//                        Toast.makeText(InfoActivity.this, "Please Provide SMS Permission To Continue", Toast.LENGTH_SHORT).show();
+//                    } else if (!contactPermission) {
+//                        Toast.makeText(InfoActivity.this, "Please Provide Contact Permission To Continue", Toast.LENGTH_SHORT).show();
+//                    } else if (!phonePermission) {
+//                        Toast.makeText(InfoActivity.this, "Please Provide Phone State Permission To Continue", Toast.LENGTH_SHORT).show();
+//                    }
                 }
                 break;
+        }
+    }
+
+    private void checkSim() {
+        mSubscriptionManager = SubscriptionManager.from(InfoActivity.this);
+        subInfoList = mSubscriptionManager.getActiveSubscriptionInfoList();
+        sharedPrefUtil.setSharedPreferenceInt(AppController.getContext(), "simCount", subInfoList.size());
+        if (subInfoList.size() == 2 && (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP_MR1)) {
+            final Dialog dialog = new Dialog(InfoActivity.this);
+            dialog.setContentView(R.layout.dialog_multisim);
+            dialog.setTitle("Custom Dialog");
+            dialog.show();
+
+            Button okButton = (Button) dialog.findViewById(R.id.button_ok);
+            okButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    sharedPrefUtil.setSharedPreferenceBoolean(AppController.getContext(), "newApp", false);
+                    startActivity(new Intent(InfoActivity.this, MainListActivity.class));
+                    dialog.dismiss();
+                    finish();
+                }
+            });
+        } else {
+            sharedPrefUtil.setSharedPreferenceBoolean(AppController.getContext(), "newApp", false);
+            startActivity(new Intent(InfoActivity.this, MainListActivity.class));
+            finish();
         }
     }
 }

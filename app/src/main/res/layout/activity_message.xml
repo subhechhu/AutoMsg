@@ -34,6 +34,28 @@
                 android:layout_marginTop="@dimen/padding_5"
                 android:layout_marginBottom="@dimen/padding_5"
                 android:layout_height="55dp" />
+            <RadioGroup
+                android:id="@+id/radioSim"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="horizontal"
+                android:gravity="center_horizontal"
+                android:layout_margin="@dimen/padding_5"
+                android:visibility="visible">
+                <RadioButton
+                    android:id="@+id/radio_sim1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/sim1"
+                    android:textColor="@color/colorPrimaryDark" />
+                <RadioButton
+                    android:id="@+id/radio_sim2"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/sim2"
+                    android:textColor="@color/colorPrimaryDark" />
+            </RadioGroup>
+
             <LinearLayout
                 android:gravity="center_vertical"
                 android:layout_width="match_parent"

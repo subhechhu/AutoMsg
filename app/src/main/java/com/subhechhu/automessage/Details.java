@@ -13,6 +13,16 @@ public class Details {
     private String id;
     private String mediumSelected;
     private String timelong;
+    private int simCount;
+    private String simSelected;
+
+    public int getSimCount() {
+        return simCount;
+    }
+
+    public void setSimCount(int simCount) {
+        this.simCount = simCount;
+    }
 
     public String getTimelong() {
         return timelong;
@@ -76,5 +86,13 @@ public class Details {
 
     public void setMediumSelected(String mediumSelected) {
         this.mediumSelected = mediumSelected;
+    }
+
+    public String getSimSelected() {
+        return simSelected;
+    }
+
+    public void setSimSelected(String simSelected) {
+        this.simSelected = simSelected;
     }
 }

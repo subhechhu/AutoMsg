@@ -10,9 +10,11 @@
     <string name="context">context</string>
     <string name="contact_permission">Contact\nPermission</string>
     <string name="sms_permission">SMS\nPermission</string>
+    <string name="phone_permission">Phone State\nPermission</string>
     <string name="proceed">Proceed</string>
     <string name="permission_request_contact">Allow the application to read Contacts.\nContact is needed to Add the Recipient</string>
     <string name="permission_request_sms">Allow the application to send SMS.\nSMS is needed to Send the Message Automatically</string>
+    <string name="permission_request_state_read">Allow the application to read Phone State.\nState is needed to Identify if the phone is Dual-Sim</string>
     <string name="permission_granted">Permission Granted</string>
     <string name="permit">Give Permission</string>
     <string name="logo">logo</string>
@@ -36,7 +38,7 @@
     <string name="addMessage">Please Enter the Message</string>
     <string name="example_text">Happy Birthday,\n\nor\n\nLets Fix Meeting on 18th, 1 PM?</string>
     <string name="save">Save</string>
-    <string name="messenger_description">Message will be send. Standard Messaging Charge will apply.</string>
+    <string name="messenger_description">Message will be sent. Standard Messaging Charge will apply.</string>
     <string name="other_medium_description">Cannot send message directly. Remainder will be generated.</string>
     <string name="title_activity_transparent">TransparentActivity</string>
 
@@ -44,6 +46,12 @@
     <string name="dummy_button">Dummy Button</string>
     <string name="dummy_content">DUMMY\nCONTENT</string>
     <string name="developer">Developer</string>
-    <string name="version">0.1.1</string>
+    <string name="version">1.1</string>
     <string name="about">About</string>
+    <string name="sim1">Sim 1</string>
+    <string name="sim2">Sim 2</string>
+
+    <string name="default_number">0011110010</string>
+    <string name="description">Google do not develop dual sim devices. So the dual sim feature is all dependent to the respective phone manufacturer. Android detects dual sim feature beyond Android Lollipop_MR1 (not LOLLPOP). As your device is below the support level, you need to select a default sim for the SMS transmission to use the AutoMsg.</string>
+    <string name="i_understand">I Understand</string>
 </resources>

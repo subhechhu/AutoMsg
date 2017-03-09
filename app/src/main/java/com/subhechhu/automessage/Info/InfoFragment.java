@@ -10,8 +10,11 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.subhechhu.automessage.AppController;
 import com.subhechhu.automessage.R;
 
 /**
@@ -57,14 +60,18 @@ public class InfoFragment extends Fragment {
         ImageView contextImageIV = (ImageView) view.findViewById(R.id.imageView_context);
         final Button contactPermissionBtn = (Button) view.findViewById(R.id.button_contactPermission);
         final Button smsPermissionBtn = (Button) view.findViewById(R.id.button_smsPermission);
+        final Button phonePermissionBtn = (Button) view.findViewById(R.id.button_phonePermission);
         final Button proceedBtn = (Button) view.findViewById(R.id.button_proceed);
         LinearLayout linearLayoutBtn = (LinearLayout) view.findViewById(R.id.linearlayout_buttons);
+        final ProgressBar progressBar= (ProgressBar) view.findViewById(R.id.progressBar_proceed);
+        progressBar.setVisibility(View.INVISIBLE);
 
         if (position == 2) {
             linearLayoutBtn.setVisibility(View.VISIBLE);
             if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
                 contactPermissionBtn.setVisibility(View.INVISIBLE);
                 smsPermissionBtn.setVisibility(View.INVISIBLE);
+                phonePermissionBtn.setVisibility(View.INVISIBLE);
             }
         } else {
             linearLayoutBtn.setVisibility(View.INVISIBLE);
@@ -82,9 +89,17 @@ public class InfoFragment extends Fragment {
                 mListener.setOnSubmitListener("sms");
             }
         });
+        phonePermissionBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mListener.setOnSubmitListener("phone");
+            }
+        });
         proceedBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+//                progressBar.setVisibility(View.VISIBLE);
+//                Toast.makeText(AppController.getContext(),"Please Wait. Processing.",Toast.LENGTH_SHORT).show();
                 mListener.setOnSubmitListener("proceed");
             }
         });
