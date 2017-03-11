@@ -1,13 +1,12 @@
 package com.subhechhu.automessage.message;
 
-import android.app.Dialog;
 import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
-import android.net.Uri;
+import android.os.Build;
 import android.telephony.SmsManager;
 import android.telephony.SubscriptionInfo;
 import android.telephony.SubscriptionManager;
@@ -18,6 +17,7 @@ import com.subhechhu.automessage.DialogClass;
 import com.subhechhu.automessage.R;
 import com.subhechhu.automessage.SharedPrefUtil;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import static android.content.Context.NOTIFICATION_SERVICE;
@@ -94,15 +94,34 @@ public class AlarmReceiver extends BroadcastReceiver {
         } else {
             i = 1;
         }
-        SubscriptionManager mSubscriptionManager = SubscriptionManager.from(context);
-        subInfoList = mSubscriptionManager.getActiveSubscriptionInfoList();
 
-        SmsManager sm = SmsManager.getSmsManagerForSubscriptionId(mSubscriptionManager.
-                getActiveSubscriptionInfoList().get(i).getSubscriptionId());
-        sm.sendTextMessage(number, null, message, null, null);
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP_MR1) {
+            ArrayList<String> parts=new ArrayList<String>();
+            int index = 0;
+            while (index < message.length()) {
+                parts.add(message.substring(index, Math.min(index + 150,message.length())));
+                index += 150;
+            }
 
-//        SmsManager smsManager = SmsManager.getDefault();
-//        smsManager.sendTextMessage(number, sender, message, null, null);
+            SmsManager smsManager = SmsManager.getDefault();
+            smsManager.sendMultipartTextMessage(number,null,parts,null,null);
+//            smsManager.sendTextMessage(number, null, message, null, null);
+        } else {
+            ArrayList<String> parts=new ArrayList<String>();
+            int index = 0;
+            while (index < message.length()) {
+                parts.add(message.substring(index, Math.min(index + 150,message.length())));
+                index += 150;
+            }
+
+            SubscriptionManager mSubscriptionManager = SubscriptionManager.from(context);
+            subInfoList = mSubscriptionManager.getActiveSubscriptionInfoList();
+
+            SmsManager sm = SmsManager.getSmsManagerForSubscriptionId(mSubscriptionManager.
+                    getActiveSubscriptionInfoList().get(i).getSubscriptionId());
+            sm.sendMultipartTextMessage(number, null, parts, null, null);
+//            sm.sendTextMessage(number, null, message, null, null);
+        }
 
         Intent intent2 = new Intent(context, MainListActivity.class);
         PendingIntent pIntent = PendingIntent.getActivity(context, Integer.parseInt(id), intent2, 0);

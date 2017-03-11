@@ -239,4 +239,10 @@ public class MainListActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        Log.e("subhechhu", "onResume MainListActivity");
+    }
 }

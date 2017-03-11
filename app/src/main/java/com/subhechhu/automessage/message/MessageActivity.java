@@ -23,7 +23,9 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.telephony.SubscriptionInfo;
 import android.telephony.SubscriptionManager;
+import android.text.Editable;
 import android.text.Html;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
 import android.view.Window;
@@ -515,6 +517,24 @@ public class MessageActivity extends AppCompatActivity {
 
         Button proceedBtn = (Button) dialog.findViewById(R.id.button_proceed);
         Button cancelBtn = (Button) dialog.findViewById(R.id.button_cancel);
+        final TextView countTV = (TextView) dialog.findViewById(R.id.textView_count);
+
+        messageET.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                countTV.setText(String.valueOf(s.length())+"/400");
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
+            }
+        });
 
         cancelBtn.setOnClickListener(new View.OnClickListener() {
             @Override

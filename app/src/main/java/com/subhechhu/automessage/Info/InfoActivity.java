@@ -231,15 +231,11 @@ public class InfoActivity extends AppCompatActivity implements InfoFragment.OnSu
     }
 
     private void checkSim() {
-        mSubscriptionManager = SubscriptionManager.from(InfoActivity.this);
-        subInfoList = mSubscriptionManager.getActiveSubscriptionInfoList();
-        sharedPrefUtil.setSharedPreferenceInt(AppController.getContext(), "simCount", subInfoList.size());
-        if (subInfoList.size() == 2 && (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP_MR1)) {
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP_MR1) {
             final Dialog dialog = new Dialog(InfoActivity.this);
+            dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
             dialog.setContentView(R.layout.dialog_multisim);
-            dialog.setTitle("Custom Dialog");
             dialog.show();
-
             Button okButton = (Button) dialog.findViewById(R.id.button_ok);
             okButton.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -251,6 +247,10 @@ public class InfoActivity extends AppCompatActivity implements InfoFragment.OnSu
                 }
             });
         } else {
+            mSubscriptionManager = SubscriptionManager.from(InfoActivity.this);
+            subInfoList = mSubscriptionManager.getActiveSubscriptionInfoList();
+            sharedPrefUtil.setSharedPreferenceInt(AppController.getContext(), "simCount", subInfoList.size());
+
             sharedPrefUtil.setSharedPreferenceBoolean(AppController.getContext(), "newApp", false);
             startActivity(new Intent(InfoActivity.this, MainListActivity.class));
             finish();
