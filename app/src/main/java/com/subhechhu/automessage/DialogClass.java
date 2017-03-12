@@ -26,6 +26,7 @@ public class DialogClass extends AppCompatActivity {
     Button proceed;
     String sourceString, sourceStringNumber;
 
+    String id;
     String mediumText;
 
     @Override
@@ -45,32 +46,52 @@ public class DialogClass extends AppCompatActivity {
         final String message = intent.getStringExtra("message");
         final String medium = intent.getStringExtra("medium");
 
-        try {
-            sourceString = medium + " Messsage Remainder" + "<br><br><b>" + name + "</b>";
-            sourceStringNumber = "\n<b>Message: </b> \n" + message;
-            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.N) {
-                textView.setText(Html.fromHtml(sourceString, Html.FROM_HTML_MODE_LEGACY));
-                textViewNumber.setText(Html.fromHtml(sourceStringNumber, Html.FROM_HTML_MODE_LEGACY));
-            } else {
-                textView.setText(Html.fromHtml(sourceString));
-                textViewNumber.setText(Html.fromHtml(sourceStringNumber));
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-            finish();
-        }
+        id=intent.getStringExtra("id");
 
-        proceed.setText(R.string.proceed);
-        proceed.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if(medium.equalsIgnoreCase("Whatsapp")){
-                    whatsappIntent(message);   
-                }else if(medium.equalsIgnoreCase("Viber")) {
-                    viberIntent(message);
-                }
+        if(id.equals("No network")){
+            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.N) {
+                textView.setText(Html.fromHtml("Message Sending Failed", Html.FROM_HTML_MODE_LEGACY));
+                textViewNumber.setText(Html.fromHtml("Message could not be sent due to issue in the Network. Please check the network and try again", Html.FROM_HTML_MODE_LEGACY));
+            } else {
+                textView.setText(Html.fromHtml("Message Sending Failed"));
+                textViewNumber.setText(Html.fromHtml("Message could not be sent due to issue in the Network. Please check the network and try again"));
             }
-        });
+            proceed.setText("Ok");
+            proceed.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    finish();
+                }
+            });
+
+        }else{
+            try {
+                sourceString = medium + " Messsage Remainder" + "<br><br><b>" + name + "</b>";
+                sourceStringNumber = "\n<b>Message: </b> \n" + message;
+                if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.N) {
+                    textView.setText(Html.fromHtml(sourceString, Html.FROM_HTML_MODE_LEGACY));
+                    textViewNumber.setText(Html.fromHtml(sourceStringNumber, Html.FROM_HTML_MODE_LEGACY));
+                } else {
+                    textView.setText(Html.fromHtml(sourceString));
+                    textViewNumber.setText(Html.fromHtml(sourceStringNumber));
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+                finish();
+            }
+
+            proceed.setText(R.string.proceed);
+            proceed.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if(medium.equalsIgnoreCase("Whatsapp")){
+                        whatsappIntent(message);
+                    }else if(medium.equalsIgnoreCase("Viber")) {
+                        viberIntent(message);
+                    }
+                }
+            });
+        }
     }
 
     private void viberIntent(String message) {

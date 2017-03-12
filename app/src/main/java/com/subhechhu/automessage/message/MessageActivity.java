@@ -307,7 +307,7 @@ public class MessageActivity extends AppCompatActivity {
         pendingIntent = PendingIntent.getBroadcast(AppController.getContext(), Integer.parseInt(details.getId()), intent, 0);
         AlarmManager manager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
         manager.set(AlarmManager.RTC_WAKEUP, remainderTimeMills, pendingIntent);
-        Toast.makeText(this, "Message Remainder is set for " + date, Toast.LENGTH_SHORT).show();
+        Toast.makeText(this, "Message Reminder  is set for " + date, Toast.LENGTH_SHORT).show();
     }
 
     private void setDescription(int position) {

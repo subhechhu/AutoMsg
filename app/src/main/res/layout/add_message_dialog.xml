@@ -25,21 +25,21 @@
         android:ems="10"
         android:gravity="top"
         android:hint="@string/example_text"
-        android:textColorHint="@color/light_grey"
-        android:inputType="textMultiLine"
+        android:inputType="textEmailAddress|textMultiLine"
         android:maxLength="400"
         android:minHeight="@dimen/padding_250"
-        android:padding="@dimen/padding_10" />
+        android:padding="@dimen/padding_10"
+        android:textColorHint="@color/light_grey" />
 
     <TextView
-        android:text="0/400"
+        android:id="@+id/textView_count"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/textView_count"
         android:layout_below="@id/message_ET"
+        android:layout_marginBottom="@dimen/activity_vertical_margin"
         android:gravity="end"
-        android:textColor="@color/colorLightText"
-        android:layout_marginBottom="@dimen/activity_vertical_margin" />
+        android:text="0/400"
+        android:textColor="@color/colorLightText" />
 
     <LinearLayout
         style="?android:attr/buttonBarStyle"
